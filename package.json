@@ -1,0 +1,18 @@
+{
+  "name": "rest-node-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "concurrently \"cd server_1 & npm run start:dev\" \"cd server_2 & npm run start:dev\"",
+    "start": "concurrently \"cd server_1 & npm run start\" \"cd server_2 & npm run start\" ",
+    "build": "concurrently \"cd server_1 & npm run build\" \"cd server_2 & npm run build\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
