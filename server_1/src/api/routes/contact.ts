@@ -28,12 +28,16 @@ export default (app: Router) => {
         const contactServiceInstance = Container.get(ContactService);
         await contactServiceInstance.createContacts(req.body as IContactIO);
 
-        return res.json({status: "OK"}).status(200);
+        return res
+          .json({status: "OK"})
+          .status(200);
       }
       catch (e)
       {
         logger.error('🔥 error on contact: %o', e);
-        return next(e);
+        return res
+          .json({status: "NotOK", message: e.original.message})
+          .status(400);
       }
     }
   );

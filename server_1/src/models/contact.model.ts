@@ -26,12 +26,10 @@ Contact.init(
     email: {
       type: DataTypes.STRING(128),
       allowNull: false,
-      validate: {
-        isEmail: {
-          msg: "Please use valid email format."
-        }
-      },
-      unique: true,
+      unique: {
+        name: "unique_email",
+        msg: "Email already exist."
+      }
     },
     phone: {
       type: DataTypes.STRING(128),
@@ -50,3 +48,10 @@ Contact.init(
     sequelize: config.db, // this bit is important
   }
 );
+
+// Contact.belongsTo(User, {
+//   foreignKey: 'userId',
+//   targetKey: 'id',
+//   as: 'user',
+//   onDelete: 'CASCADE'
+// })

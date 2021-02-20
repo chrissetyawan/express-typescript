@@ -56,3 +56,17 @@ Offer.init(
     sequelize: config.db
   }
 )
+
+// Offer.belongsTo(User, {
+//   foreignKey: 'userId',
+//   targetKey: 'id',
+//   as: 'user',
+//   onDelete: 'CASCADE'
+// })
+
+// Offer.belongsTo(Contact, {
+//   foreignKey: 'contactId',
+//   targetKey: 'id',
+//   as: 'contact',
+//   onDelete: 'CASCADE'
+// })

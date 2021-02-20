@@ -1,9 +1,8 @@
-import sequelize, { HasMany } from 'sequelize';
+import sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 import { IContact, IContactIO } from '../interfaces/Contact';
-import { IUser } from '../interfaces/User';
 import JobService from './job';
 
 @Service()
@@ -16,8 +15,8 @@ export default class ContactService {
     private job: JobService,
   ){}
 
-  public async createContacts(dataContact: IContactIO): Promise<{ created: number }> {
-    
+  public async createContacts(dataContact: IContactIO): Promise<string> {
+
     try 
     {
       let { queue } = await this.job.getLastQueue();
@@ -94,7 +93,7 @@ export default class ContactService {
               })
             });
 
-            console.log("Offer with contact id: %d send to team member with id: %d", offerData.contactId, offerData.userId);
+            Logger.info("Offer with contact id: %d send to team member with id: %d", offerData.contactId, offerData.userId);
 
             const index = team.indexOf(lowestOfferMember);
             if(index > -1) {
@@ -105,13 +104,14 @@ export default class ContactService {
         }
       }
 
-      return {created: 1};
+      return;
     }
     catch (e)
     {
       this.logger.error(e);
       throw e;
     }
+
   }
 
   public async getContacts(userId: string): Promise<{contacts: (IContact)[]}> {
