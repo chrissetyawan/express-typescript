@@ -8,6 +8,6 @@ export class NotificationController
     
     Notification.create<Notification>(param)
       .then(() => res.json({"status": "OK"}))
-      .catch((err) => res.json({"status": "Err", "message": err}));
+      .catch((err) => res.json({"status": "Err", "message": err}).status(401));
   }
 }

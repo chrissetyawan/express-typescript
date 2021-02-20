@@ -26,7 +26,7 @@ export default class OfferService {
       }
 
       this.logger.silly('Sending offer notifictication');
-      this.eventDispatcher.dispatch(events.offer.offerSended, { offer: offerRecord });
+      this.eventDispatcher.dispatch(events.offer.offerSended, offerRecord);
       
       return { offer: offerRecord };
     }
