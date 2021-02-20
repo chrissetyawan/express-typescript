@@ -1,9 +1,10 @@
-import sequelize from 'sequelize';
-import { Op } from 'sequelize';
+import sequelize, { Sequelize } from 'sequelize';
+import { Op, Transaction  } from 'sequelize';
 import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 import { IContact, IContactIO } from '../interfaces/Contact';
 import JobService from './job';
+import config from '../config';
 
 @Service()
 export default class ContactService {
@@ -16,9 +17,12 @@ export default class ContactService {
   ){}
 
   public async createContacts(dataContact: IContactIO): Promise<string> {
+    let transaction: Transaction;
 
     try 
     {
+      transaction = await config.db.transaction();
+
       let { queue } = await this.job.getLastQueue();
       const ContactModel = this.ContactModel;
       const UserModel = this.UserModel;
@@ -43,7 +47,7 @@ export default class ContactService {
 
         if(user.roleId === 1)
         {
-          const insertedContact = await ContactModel.create(contact);
+          const insertedContact = await ContactModel.create(contact, {transaction: transaction});
 
           if( team.length <= 0 || currentLeader != contact.userId)
           {
@@ -91,7 +95,7 @@ export default class ContactService {
                 handler: "offerHandler",
                 data: offerData,
               })
-            });
+            }, transaction);
 
             Logger.info("Offer with contact id: %d send to team member with id: %d", offerData.contactId, offerData.userId);
 
@@ -104,10 +108,16 @@ export default class ContactService {
         }
       }
 
+      await transaction.commit();
+
       return;
     }
     catch (e)
     {
+      if(transaction) 
+      {
+        await transaction.rollback();
+      }
       this.logger.error(e);
       throw e;
     }

@@ -1,3 +1,4 @@
+import { Transaction } from 'sequelize/types';
 import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 
@@ -8,10 +9,10 @@ export default class JobService {
     @Inject('logger') private logger: Logger,
   ){}
 
-  public async createJob(job: { queue: number, payload: string, }): Promise<{created: number, status: string}> {
+  public async createJob(job: { queue: number, payload: string, }, transaction: Transaction): Promise<{created: number, status: string}> {
     try 
     {
-      const jobRecord = await this.JobModel.create(job)
+      const jobRecord = await this.JobModel.create(job, {transaction: transaction})
       if (!jobRecord) {
         throw new Error('Job cannot be created');
       }
